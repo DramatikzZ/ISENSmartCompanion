@@ -1,6 +1,15 @@
 <resources>
+    //App Name
     <string name="app_name">ISENSmartCompanion</string>
     <string name="app_title">Smart Companion</string>
+
+    //Images
     <string name="isen_logo">Logo ISEN</string>
     <string name="send_button">Bouton envoyé</string>
+
+    // NavBar
+    <string name="bottom_navbar_home">Home</string>
+    <string name="bottom_navbar_event">Events</string>
+    <string name="bottom_navbar_history">History</string>
+
 </resources>
