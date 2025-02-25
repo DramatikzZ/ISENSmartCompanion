@@ -2,4 +2,5 @@
     <string name="app_name">ISENSmartCompanion</string>
     <string name="app_title">Smart Companion</string>
     <string name="isen_logo">Logo ISEN</string>
+    <string name="send_button">Bouton envoyé</string>
 </resources>
