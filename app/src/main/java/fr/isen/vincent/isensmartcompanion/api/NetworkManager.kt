@@ -1,10 +1,12 @@
 package fr.isen.vincent.isensmartcompanion.api
 
+import com.google.ai.client.generativeai.BuildConfig
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object NetworkManager {
     private const val baseUrl = "https://isen-smart-companion-default-rtdb.europe-west1.firebasedatabase.app/"
+    //private val baseUrl = BuildConfig.BASE_URL
 
     val api: ApiService by lazy {
         Retrofit.Builder()

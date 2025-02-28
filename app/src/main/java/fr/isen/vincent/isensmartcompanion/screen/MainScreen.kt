@@ -1,6 +1,5 @@
 package fr.isen.vincent.isensmartcompanion.screen
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +23,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,12 +32,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import fr.isen.vincent.isensmartcompanion.R
+import kotlinx.coroutines.launch
+import fr.isen.vincent.isensmartcompanion.api.gemini.GeminiAPI
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(innerPadding : PaddingValues) {
     val context = LocalContext.current
     var userInput = remember { mutableStateOf("") }
+
+    var savedinput = remember { mutableStateOf("") }
+    var answer = remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+
+    var AnswerList = remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
 
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxSize().padding(innerPadding),
@@ -85,8 +93,16 @@ fun MainScreen(innerPadding : PaddingValues) {
 
             Button(
                 onClick = {
-                    Toast.makeText(context, "Question Submitted", Toast.LENGTH_SHORT).show()
-                    Log.d("testing", "button clicked")
+                    if (userInput.value.isNotEmpty()) {
+                        coroutineScope.launch {
+                            savedinput.value = userInput.value
+                            userInput.value = ""
+                            answer.value = GeminiAPI.generateResponse(savedinput.value)
+                            Toast.makeText(context, answer.value, Toast.LENGTH_LONG).show()
+                        }
+                    } else {
+                        Toast.makeText(context, "Please enter text", Toast.LENGTH_LONG).show()
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 content = {
@@ -99,5 +115,6 @@ fun MainScreen(innerPadding : PaddingValues) {
                 }
             )
         }
+        Spacer(modifier = Modifier.height(30.dp))
     }
 }

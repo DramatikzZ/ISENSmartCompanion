@@ -30,12 +30,11 @@ fun EventsScreen(innerPadding: PaddingValues, eventHandler: (EventModel) -> Unit
     val context = LocalContext.current
     val events = remember { mutableStateOf<List<EventModel>>(listOf())}
     LaunchedEffect(Unit) {
+
         val call = NetworkManager.api.getEvents()
         call.enqueue(object : Callback<List<EventModel>> {
-            override fun onResponse(
-                p0: Call<List<EventModel>>,
-                p1: Response<List<EventModel>>
-            ) {
+
+            override fun onResponse(p0: Call<List<EventModel>>, p1: Response<List<EventModel>>) {
                events.value = p1.body() ?: listOf()
             }
 
