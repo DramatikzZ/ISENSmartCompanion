@@ -15,22 +15,21 @@ import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import fr.isen.vincent.isensmartcompanion.api.NetworkManager
 import fr.isen.vincent.isensmartcompanion.models.EventModel
 import fr.isen.vincent.isensmartcompanion.screen.EventsScreen
 import fr.isen.vincent.isensmartcompanion.screen.HistoryScreen
 import fr.isen.vincent.isensmartcompanion.screen.MainScreen
 import fr.isen.vincent.isensmartcompanion.screen.TabView
 import fr.isen.vincent.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
-
-
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 data class TabBarItem(
     val title: String,
@@ -43,6 +42,7 @@ data class TabBarItem(
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        fetchEvents()
         Log.d("lifecycle", "MainActivity onCreate")
         enableEdgeToEdge()
         setContent {
@@ -89,6 +89,21 @@ class MainActivity : ComponentActivity() {
             putExtra(EventDetailActivity.eventExtraKey, event)
         }
         startActivity(intent)
+    }
+
+    fun fetchEvents() {
+        val call = NetworkManager.api.getEvents()
+        call.enqueue(object : Callback<List<EventModel>> {
+            override fun onResponse(p0: Call<List<EventModel>>, p1: Response<List<EventModel>>) {
+                p1.body()?.forEach {
+                    Log.d("request", "event : ${it.title}")
+                }
+            }
+
+            override fun onFailure(p0: Call<List<EventModel>>, p1: Throwable) {
+                Log.e("request", p1.message ?: "request failed")
+            }
+        })
     }
 
     override fun onRestart() {

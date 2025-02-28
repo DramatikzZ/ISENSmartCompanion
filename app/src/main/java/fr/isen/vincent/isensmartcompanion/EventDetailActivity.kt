@@ -1,18 +1,28 @@
 package fr.isen.vincent.isensmartcompanion
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.isen.vincent.isensmartcompanion.models.EventModel
@@ -68,7 +78,24 @@ class EventDetailActivity : ComponentActivity() {
 
 @Composable
 fun EventDetail(event: EventModel, innerPaddingValues: PaddingValues) {
+    val context = LocalContext.current
     Column(Modifier.padding(innerPaddingValues)) {
+        Button(
+            onClick = {
+                val intent = Intent(context, MainActivity::class.java)
+                context.startActivity(intent)
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+            content = {
+                Image(
+                    painterResource(R.drawable.send),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .rotate(180f)
+                        .size(30.dp)
+                )
+            }
+        )
         Text(event.title)
         Text(event.date)
         Text(event.category)
