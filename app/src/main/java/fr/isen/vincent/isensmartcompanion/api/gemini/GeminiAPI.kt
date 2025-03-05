@@ -1,5 +1,6 @@
 package fr.isen.vincent.isensmartcompanion.api.gemini
 
+import com.google.ai.client.generativeai.BuildConfig
 import com.google.ai.client.generativeai.GenerativeModel
 
 object GeminiAPI {

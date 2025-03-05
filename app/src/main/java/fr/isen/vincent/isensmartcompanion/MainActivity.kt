@@ -15,12 +15,14 @@ import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.isen.vincent.isensmartcompanion.api.NetworkManager
+import fr.isen.vincent.isensmartcompanion.chat_database.DBInstance
 import fr.isen.vincent.isensmartcompanion.models.EventModel
 import fr.isen.vincent.isensmartcompanion.screen.EventsScreen
 import fr.isen.vincent.isensmartcompanion.screen.HistoryScreen
@@ -45,6 +47,7 @@ class MainActivity : ComponentActivity() {
         fetchEvents()
         Log.d("lifecycle", "MainActivity onCreate")
         enableEdgeToEdge()
+
         setContent {
             val homeTab = TabBarItem(title = getString(R.string.bottom_navbar_home), selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
             val eventsTab = TabBarItem(title = getString(R.string.bottom_navbar_event), selectedIcon = Icons.Filled.DateRange, unselectedIcon = Icons.Outlined.DateRange)
@@ -56,6 +59,9 @@ class MainActivity : ComponentActivity() {
             // creating our navController
             val navController = rememberNavController()
 
+            // creating chatdao
+            val chatHistory = DBInstance.getDatabase(applicationContext)
+
             ISENSmartCompanionTheme {
                 Scaffold( bottomBar = {
                     TabView(tabBarItems, navController)
@@ -64,7 +70,7 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(navController = navController, startDestination = homeTab.title) {
                         composable(homeTab.title) {
-                            MainScreen(innerPadding)
+                            MainScreen(innerPadding, chatHistory)
                         }
                         composable(eventsTab.title) {
                             EventsScreen(
@@ -75,10 +81,9 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(historyTab.title) {
-                            HistoryScreen(innerPadding)
+                            HistoryScreen(innerPadding, chatHistory)
                         }
                     }
-
                 }
             }
         }

@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    // couleur logo isen
+    <color name="isen_red">#b72726</color>
+
+    // Couleur bulles chat
+    <color name="chat">#eaeaea</color>
+
 </resources>
