@@ -5,11 +5,14 @@
 
     //Images
     <string name="isen_logo">Logo ISEN</string>
-    <string name="send_button">Bouton envoyé</string>
+    <string name="send_button">Bouton envoyer</string>
 
     // NavBar
     <string name="bottom_navbar_home">Home</string>
     <string name="bottom_navbar_event">Events</string>
     <string name="bottom_navbar_history">History</string>
+
+    <!-- HISTORY -->
+    <string name="delete_button">Bouton Supprimer</string>
 
 </resources>

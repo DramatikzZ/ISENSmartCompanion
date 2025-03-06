@@ -1,4 +1,4 @@
-package fr.isen.vincent.isensmartcompanion.chat_database
+package fr.isen.vincent.isensmartcompanion.data.chat
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ChatDao {
+    /*@Query("SELECT * FROM chat_messages WHERE id = :chatId")
+    fun getChatById(chatId: Int): Flow<ChatModel>*/
+
     @Query("SELECT * FROM chat_messages ORDER BY timestamp DESC")
     fun getAllChats(): Flow<List<ChatModel>>
 

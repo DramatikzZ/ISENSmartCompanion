@@ -1,4 +1,4 @@
-package fr.isen.vincent.isensmartcompanion.chat_database
+package fr.isen.vincent.isensmartcompanion.data.chat
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

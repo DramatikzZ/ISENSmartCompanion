@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Mode clair -->
+    <color name="light_primary">#b72726</color>
+    <color name="light_secondary">#03DAC5</color>
+    <color name="light_surface">#FFFFFF</color>
+    <color name="light_surface_variant">#FFFFFF</color>
+    <color name="light_on_surface">#212121</color>
+    <color name="light_on_surface_variant">#757575</color>
+
+    <color name="light_background">#F5F5F5</color>
+
+
+    <color name="light_bottom_nav">#FFFFFF</color> <!-- Fond plus visible pour la barre de navigation -->
+
+</resources>

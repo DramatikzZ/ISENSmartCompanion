@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Mode sombre -->
+    <color name="dark_primary">#b72726</color>
+    <color name="dark_secondary">#03DAC5</color>
+    <color name="dark_surface">#121212</color>
+    <color name="dark_surface_variant">#1E1E1E</color>
+    <color name="dark_on_surface">#E0E0E0</color>
+    <color name="dark_on_surface_variant">#B0B0B0</color>
+
+
+    <color name="dark_background">#121212</color>
+    <color name="dark_bottom_nav">#1E1E1E</color> <!-- Plus sombre en mode sombre -->
+
+
+</resources>

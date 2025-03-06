@@ -76,4 +76,6 @@ dependencies {
     testImplementation(libs.androidx.room.testing)
     implementation(libs.androidx.room.paging)
 
+    //Notifications
+    implementation(libs.androidx.core.ktx)
 }

@@ -18,12 +18,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,149 +31,130 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.google.ai.client.generativeai.Chat
 import fr.isen.vincent.isensmartcompanion.R
 import kotlinx.coroutines.launch
 import fr.isen.vincent.isensmartcompanion.api.gemini.GeminiAPI
-import fr.isen.vincent.isensmartcompanion.chat_database.ChatDao
-import fr.isen.vincent.isensmartcompanion.chat_database.ChatDatabase
+import fr.isen.vincent.isensmartcompanion.data.chat.ChatDatabase
 import fr.isen.vincent.isensmartcompanion.models.ChatModel
+import fr.isen.vincent.isensmartcompanion.utils.constants.Constants
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(innerPadding: PaddingValues, chatHistory: ChatDatabase) {
     val context = LocalContext.current
-    var userInput = remember { mutableStateOf("") }
-
-    var savedinput = remember { mutableStateOf("") }
-    var answer = remember { mutableStateOf("") }
+    val userInput = remember { mutableStateOf("") }
+    val savedInput = remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
-
-    // Liste pour stocker les messages envoyés et leurs réponses
-    var AnswerList = remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
-
+    val answerList = remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
     val chatDao = chatHistory.ChatDao()
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
             .fillMaxSize()
-            .padding(innerPadding),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+            .padding(innerPadding)
+            .background(MaterialTheme.colorScheme.background),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // Image et titre
         Image(
-            painterResource(R.drawable.isen_logo),
-            context.getString(R.string.isen_logo),
+            painter = painterResource(R.drawable.isen_smart_companion_logo),
+            contentDescription = context.getString(R.string.isen_logo),
             modifier = Modifier
-                .fillMaxWidth() // L'image prendra toute la largeur
-                .padding(horizontal = 16.dp) // Appliquez un padding horizontal de 32 dp
-                .height(200.dp) // Définissez une hauteur pour l'image
+                .size(240.dp)
         )
 
-        Text(
-            text = context.getString(R.string.app_title),
-            modifier = Modifier
-        )
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Espacement entre le titre et la zone de texte
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // LazyColumn pour afficher les messages envoyés et les réponses
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f) // Permet à la liste de prendre l’espace disponible
-                .padding(horizontal = 24.dp)
-                .padding(vertical = 8.dp)
+                .weight(1f)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(AnswerList.value) { (question, response) ->
+            items(answerList.value) { (question, response) ->
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                        .background(colorResource(id = R.color.chat), RoundedCornerShape(16.dp))
-                        .padding(8.dp)
+                        .background(
+                            MaterialTheme.colorScheme.surfaceVariant,
+                            RoundedCornerShape(16.dp)
+                        )
+                        .padding(12.dp)
                 ) {
-                    Text(text = "Vous: $question",
-                        color = colorResource(id = R.color.isen_red),
-                        fontWeight = FontWeight.Bold)
-                    //Text("")
-                    Text(text = "Bot: $response",
-                        color = Color.Black)
+                    Text(
+                        text = "👤 : $question",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "🤖 : $response",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
 
-        // Espace entre la liste de messages et le champ de texte
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Zone de saisie et bouton pour envoyer la question
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 16.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(Color.LightGray)
-                .padding(8.dp)
-                .height(60.dp)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
                 value = userInput.value,
                 onValueChange = { userInput.value = it },
+                placeholder = { Text(Constants.PLACE_HOLDER_CHAT) },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                    errorContainerColor = Color.Transparent
+                    unfocusedIndicatorColor = Color.Transparent
                 ),
-                modifier = Modifier.weight(1F)
+                modifier = Modifier.weight(1f)
             )
 
             Button(
                 onClick = {
                     if (userInput.value.isNotEmpty()) {
                         coroutineScope.launch {
-                            savedinput.value = userInput.value
-                            userInput.value = "" // Réinitialisation du champ de texte
+                            savedInput.value = userInput.value
+                            userInput.value = ""
 
-                            // Appel à l'API pour générer la réponse
-                            val response = GeminiAPI.generateResponse(savedinput.value)
+                            val response = GeminiAPI.generateResponse(savedInput.value)
+                            answerList.value += listOf(savedInput.value to response)
 
-                            // Mise à jour de la liste des réponses
-                            AnswerList.value = AnswerList.value + listOf(savedinput.value to response)
-
-                            val chatMessage = ChatModel(question = savedinput.value, answer = response)
+                            val chatMessage = ChatModel(question = savedInput.value, answer = response)
                             chatDao.insertChat(chatMessage)
-
-                            // Affichage d'un toast avec la réponse (facultatif)
-                            Toast.makeText(context, response, Toast.LENGTH_LONG).show()
                         }
                     } else {
-                        Toast.makeText(context, "Please enter text", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, Constants.ERROR_MESSAGE_CHAT, Toast.LENGTH_LONG).show()
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                content = {
-                    Image(
-                        painterResource(R.drawable.send),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .size(40.dp)
-                    )
-                }
-            )
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                modifier = Modifier.size(40.dp)
+            ) {
+                /*Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = "Envoyer",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.fillMaxSize()
+
+                )*/
+            }
         }
 
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
+

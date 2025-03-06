@@ -1,33 +1,34 @@
 package fr.isen.vincent.isensmartcompanion
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.List
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.isen.vincent.isensmartcompanion.api.NetworkManager
-import fr.isen.vincent.isensmartcompanion.chat_database.DBInstance
+import fr.isen.vincent.isensmartcompanion.data.chat.DBInstance
 import fr.isen.vincent.isensmartcompanion.models.EventModel
 import fr.isen.vincent.isensmartcompanion.screen.EventsScreen
 import fr.isen.vincent.isensmartcompanion.screen.HistoryScreen
 import fr.isen.vincent.isensmartcompanion.screen.MainScreen
-import fr.isen.vincent.isensmartcompanion.screen.TabView
+import fr.isen.vincent.isensmartcompanion.navigation.TabView
 import fr.isen.vincent.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
 import retrofit2.Call
 import retrofit2.Callback
@@ -42,6 +43,7 @@ data class TabBarItem(
 
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fetchEvents()
@@ -51,15 +53,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             val homeTab = TabBarItem(title = getString(R.string.bottom_navbar_home), selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
             val eventsTab = TabBarItem(title = getString(R.string.bottom_navbar_event), selectedIcon = Icons.Filled.DateRange, unselectedIcon = Icons.Outlined.DateRange)
-            val historyTab = TabBarItem(title = getString(R.string.bottom_navbar_history), selectedIcon = Icons.Filled.List, unselectedIcon = Icons.Outlined.List)
+            val historyTab = TabBarItem(title = getString(R.string.bottom_navbar_history), selectedIcon = Icons.AutoMirrored.Filled.List, unselectedIcon = Icons.AutoMirrored.Outlined.List)
 
-            // creating a list of all the tabs
             val tabBarItems = listOf(homeTab, eventsTab, historyTab)
 
-            // creating our navController
             val navController = rememberNavController()
 
-            // creating chatdao
             val chatHistory = DBInstance.getDatabase(applicationContext)
 
             ISENSmartCompanionTheme {
@@ -81,7 +80,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(historyTab.title) {
-                            HistoryScreen(innerPadding, chatHistory)
+                            HistoryScreen(innerPadding)
                         }
                     }
                 }
@@ -89,14 +88,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun startEventDetailActivity(event: EventModel) {
+    private fun startEventDetailActivity(event: EventModel) {
         val intent = Intent(this, EventDetailActivity::class.java).apply {
             putExtra(EventDetailActivity.eventExtraKey, event)
         }
         startActivity(intent)
     }
 
-    fun fetchEvents() {
+    private fun fetchEvents() {
         val call = NetworkManager.api.getEvents()
         call.enqueue(object : Callback<List<EventModel>> {
             override fun onResponse(p0: Call<List<EventModel>>, p1: Response<List<EventModel>>) {

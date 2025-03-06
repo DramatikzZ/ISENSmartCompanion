@@ -1,27 +1,27 @@
-package fr.isen.vincent.isensmartcompanion.chat_database
+package fr.isen.vincent.isensmartcompanion.data.chat
 
 import android.content.Context
 import androidx.room.Room
+import fr.isen.vincent.isensmartcompanion.utils.constants.Constants
 
 object DBInstance {
     @Volatile
     private var INSTANCE: ChatDatabase? = null
-    private var chatDao: ChatDao? = null
 
     fun getDatabase(context: Context): ChatDatabase {
         return INSTANCE ?: synchronized(this) {
             val instance = Room.databaseBuilder(
                 context.applicationContext,
                 ChatDatabase::class.java,
-                "IsenSmartCompanion-db"
-            ).build()
+                Constants.DATABASE_NAME
+            ).fallbackToDestructiveMigration()
+                .build()
             INSTANCE = instance
-            chatDao = instance.ChatDao()
             instance
         }
     }
 
     fun getChatDao(context: Context): ChatDao {
-        return chatDao ?: getDatabase(context).ChatDao()
+        return getDatabase(context).ChatDao()
     }
 }

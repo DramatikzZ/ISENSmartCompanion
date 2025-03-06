@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,17 +36,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import fr.isen.vincent.isensmartcompanion.chat_database.ChatDao
-import fr.isen.vincent.isensmartcompanion.chat_database.ChatDatabase
-import fr.isen.vincent.isensmartcompanion.chat_database.DBInstance
+import androidx.compose.ui.text.font.FontWeight
+import fr.isen.vincent.isensmartcompanion.data.chat.ChatDao
+import fr.isen.vincent.isensmartcompanion.data.chat.DBInstance
 import fr.isen.vincent.isensmartcompanion.models.ChatModel
+import fr.isen.vincent.isensmartcompanion.utils.constants.Constants
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
-fun HistoryScreen(innerPadding: PaddingValues, chatHistory: ChatDatabase) {
+fun HistoryScreen(innerPadding: PaddingValues) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val chatDao: ChatDao = remember { DBInstance.getChatDao(context) }
@@ -61,42 +63,65 @@ fun HistoryScreen(innerPadding: PaddingValues, chatHistory: ChatDatabase) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(innerPadding)
+            .padding(16.dp)
+            .background(MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Chat History",
-            style = MaterialTheme.typography.titleLarge
+            text = Constants.HISTORY_TITLE,
+            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentWidth(Alignment.CenterHorizontally)
+                .padding(bottom = 16.dp)
         )
 
-        Spacer(modifier = Modifier
-            .height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(chatHistory) { message ->
-                HistoryItem(
-                    message = message,
-                    onDelete = {
-                        coroutineScope.launch {
-                            chatDao.deleteChat(message)
-                            Toast.makeText(context, "Message supprimé", Toast.LENGTH_SHORT).show()
+        if (chatHistory.isEmpty()) {
+            Text(
+                text = Constants.ERROR_MESSAGE_HISTORY,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(chatHistory) { message ->
+                    HistoryItem(
+                        message = message,
+                        onDelete = {
+                            coroutineScope.launch {
+                                chatDao.deleteChat(message)
+                                Toast.makeText(context, Constants.DELETE_CHAT_MESSAGE, Toast.LENGTH_SHORT).show()
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = {
                 coroutineScope.launch {
                     chatDao.deleteAllChats()
-                    Toast.makeText(context, "History Deleted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, Constants.DELETE_HISTORY_MESSAGE, Toast.LENGTH_SHORT).show()
                 }
             },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF800020), contentColor = Color.White),
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         ) {
-            Text("Delete History")
+            Text(Constants.DELETE_HISTORY, color = Color.White)
         }
     }
 }
@@ -106,27 +131,32 @@ fun HistoryItem(message: ChatModel, onDelete: () -> Unit) {
     val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
     val formattedDate = dateFormat.format(Date(message.timestamp))
 
-    Column(
+    androidx.compose.material3.Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .background(Color(0xFFEFEFEF), shape = RoundedCornerShape(8.dp))
-            .padding(12.dp)
+            .padding(4.dp),
+        shape = RoundedCornerShape(12.dp),
+        elevation = androidx.compose.material3.CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        Text(text = "Date : $formattedDate", style = MaterialTheme.typography.bodyMedium)
-        Spacer(modifier = Modifier.height(3.dp))
-        HorizontalDivider( thickness = 1.dp)
-        Spacer(modifier = Modifier.height(3.dp))
-        Text(text = "Question :  ${message.question}", style = MaterialTheme.typography.bodyMedium)
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(text = "Answer :  ${message.answer}", style = MaterialTheme.typography.bodyMedium, color = Color.DarkGray)
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+        Column(
+            modifier = Modifier.padding(16.dp)
         ) {
-            IconButton(onClick = onDelete) {
-                Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color(0xFF800020))
+            Text(text = "📅 $formattedDate", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+            Spacer(modifier = Modifier.height(4.dp))
+            HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = "🗨️ : ${message.question}", style = MaterialTheme.typography.bodyMedium)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = "🤖 : ${message.answer}", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(onClick = onDelete) {
+                    Icon(Icons.Default.Delete, contentDescription = "Supprimer", tint = MaterialTheme.colorScheme.error)
+                }
             }
         }
     }
