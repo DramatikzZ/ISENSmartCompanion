@@ -3,9 +3,7 @@ package fr.isen.vincent.isensmartcompanion.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "courses")
 data class CourseModel(
-    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val title: String,
     val dayOfWeek: Int,
