@@ -70,7 +70,9 @@ fun AgendaScreen() {
     }
 
     val filteredEvents = events.value.filter { eventModel ->
-        sharedPreferences.getBoolean(eventModel.id, false)
+        val isFavorite = sharedPreferences.getBoolean(eventModel.title, false)
+        val isSameDay = eventModel.date == formattedDate // Vérification par date
+        isFavorite && isSameDay
     }
 
     filteredEvents.forEach { event ->
@@ -119,11 +121,9 @@ fun AgendaScreen() {
                     items(filteredCourses) { course ->
                         CourseItem(course)
                     }
-                }
-            }
-            LazyColumn(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                items(filteredEvents) { event ->
-                    EventItem(event)
+                    items(filteredEvents) { event ->
+                        EventItem(event)
+                    }
                 }
             }
         }
@@ -159,8 +159,8 @@ fun EventItem(event: EventModel) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = event.title, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "${event.date}")
             Text(text = "Location: ${event.location}")
+            Text(text = "Description: ${event.description}")
         }
     }
 }

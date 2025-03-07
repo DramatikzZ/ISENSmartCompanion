@@ -100,7 +100,7 @@ fun EventDetail(event: EventModel, innerPaddingValues: PaddingValues) {
     val context = LocalContext.current
 
     val sharedPreferences = context.getSharedPreferences(getString(context, R.string.event_preferences), Context.MODE_PRIVATE)
-    var isSubscribed by remember { mutableStateOf(sharedPreferences.getBoolean(event.id, false)) }
+    var isSubscribed by remember { mutableStateOf(sharedPreferences.getBoolean(event.title, false)) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -186,7 +186,7 @@ fun EventDetail(event: EventModel, innerPaddingValues: PaddingValues) {
                     Notification.pushNotifications(context, event, permissionLauncher)
                 }
                 isSubscribed = !isSubscribed
-                sharedPreferences.edit().putBoolean(event.id, isSubscribed).apply()
+                sharedPreferences.edit().putBoolean(event.title, isSubscribed).apply()
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = if (isSubscribed) Color.Red else MaterialTheme.colorScheme.primary)
