@@ -34,12 +34,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import fr.isen.vincent.isensmartcompanion.R
 import kotlinx.coroutines.launch
 import fr.isen.vincent.isensmartcompanion.api.gemini.GeminiAPI
 import fr.isen.vincent.isensmartcompanion.data.chat.ChatDatabase
 import fr.isen.vincent.isensmartcompanion.models.ChatModel
-import fr.isen.vincent.isensmartcompanion.utils.constants.Constants
 
 @Composable
 fun MainScreen(innerPadding: PaddingValues, chatHistory: ChatDatabase) {
@@ -114,7 +114,7 @@ fun MainScreen(innerPadding: PaddingValues, chatHistory: ChatDatabase) {
             TextField(
                 value = userInput.value,
                 onValueChange = { userInput.value = it },
-                placeholder = { Text(Constants.PLACE_HOLDER_CHAT) },
+                placeholder = { Text(getString(context, R.string.place_holder_chat)) },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
@@ -138,7 +138,7 @@ fun MainScreen(innerPadding: PaddingValues, chatHistory: ChatDatabase) {
                             chatDao.insertChat(chatMessage)
                         }
                     } else {
-                        Toast.makeText(context, Constants.ERROR_MESSAGE_CHAT, Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, getString(context, R.string.error_message_chat), Toast.LENGTH_LONG).show()
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),

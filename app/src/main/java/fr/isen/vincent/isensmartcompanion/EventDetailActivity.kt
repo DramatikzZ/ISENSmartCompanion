@@ -40,9 +40,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import fr.isen.vincent.isensmartcompanion.models.EventModel
 import fr.isen.vincent.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
-import fr.isen.vincent.isensmartcompanion.utils.constants.Constants
 import fr.isen.vincent.isensmartcompanion.utils.notifications.Notification
 import fr.isen.vincent.isensmartcompanion.utils.notifications.NotificationChannelManager
 
@@ -99,16 +99,16 @@ class EventDetailActivity : ComponentActivity() {
 fun EventDetail(event: EventModel, innerPaddingValues: PaddingValues) {
     val context = LocalContext.current
 
-    val sharedPreferences = context.getSharedPreferences("EventPrefs", Context.MODE_PRIVATE)
+    val sharedPreferences = context.getSharedPreferences(getString(context, R.string.event_preferences), Context.MODE_PRIVATE)
     var isSubscribed by remember { mutableStateOf(sharedPreferences.getBoolean(event.title, false)) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (isGranted) {
-                Toast.makeText(context, Constants.AUTHORIZED_MESSAGE, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(context, R.string.authorized_message), Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(context, Constants.REFUSED_MESSAGE, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(context, R.string.refused_message), Toast.LENGTH_SHORT).show()
             }
         }
     )
@@ -130,7 +130,7 @@ fun EventDetail(event: EventModel, innerPaddingValues: PaddingValues) {
             content = {
                 Image(
                     painterResource(R.drawable.send),
-                    contentDescription = "Retour",
+                    contentDescription = getString(context, R.string.retour_icon),
                     modifier = Modifier
                         .rotate(180f)
                         .size(30.dp)
@@ -192,7 +192,7 @@ fun EventDetail(event: EventModel, innerPaddingValues: PaddingValues) {
             colors = ButtonDefaults.buttonColors(containerColor = if (isSubscribed) Color.Red else MaterialTheme.colorScheme.primary)
         ) {
             Text(
-                text = if (isSubscribed) Constants.UNSUBSCRIBE_BUTTON else Constants.SUBSCRIBE_BUTTON,
+                text = if (isSubscribed) getString(context, R.string.unsubscribe_button) else getString(context, R.string.subscribe_button),
                 color = Color.White
             )
         }

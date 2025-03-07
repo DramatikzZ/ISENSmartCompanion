@@ -14,8 +14,10 @@ import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -29,6 +31,7 @@ import fr.isen.vincent.isensmartcompanion.screen.EventsScreen
 import fr.isen.vincent.isensmartcompanion.screen.HistoryScreen
 import fr.isen.vincent.isensmartcompanion.screen.MainScreen
 import fr.isen.vincent.isensmartcompanion.navigation.TabView
+import fr.isen.vincent.isensmartcompanion.screen.AgendaScreen
 import fr.isen.vincent.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
 import retrofit2.Call
 import retrofit2.Callback
@@ -52,10 +55,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val homeTab = TabBarItem(title = getString(R.string.bottom_navbar_home), selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
-            val eventsTab = TabBarItem(title = getString(R.string.bottom_navbar_event), selectedIcon = Icons.Filled.DateRange, unselectedIcon = Icons.Outlined.DateRange)
+            val eventsTab = TabBarItem(title = getString(R.string.bottom_navbar_event), selectedIcon = Icons.Filled.Place, unselectedIcon = Icons.Outlined.Place)
             val historyTab = TabBarItem(title = getString(R.string.bottom_navbar_history), selectedIcon = Icons.AutoMirrored.Filled.List, unselectedIcon = Icons.AutoMirrored.Outlined.List)
+            val agendaTab = TabBarItem(title = getString(R.string.bottom_navbar_agenda), selectedIcon = Icons.Filled.DateRange, unselectedIcon =  Icons.Outlined.DateRange)
 
-            val tabBarItems = listOf(homeTab, eventsTab, historyTab)
+            val tabBarItems = listOf(homeTab, eventsTab, agendaTab, historyTab)
 
             val navController = rememberNavController()
 
@@ -81,6 +85,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(historyTab.title) {
                             HistoryScreen(innerPadding)
+                        }
+                        composable(agendaTab.title) {
+                            AgendaScreen()
                         }
                     }
                 }

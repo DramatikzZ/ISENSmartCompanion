@@ -7,7 +7,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import fr.isen.vincent.isensmartcompanion.R
 
@@ -19,13 +18,10 @@ fun ISENSmartCompanionTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val context = LocalContext.current
-
     // Couleurs du mode clair
     val lightColors = lightColorScheme(
         primary = colorResource(id = R.color.light_primary),
         secondary = colorResource(id = R.color.light_secondary),
-        //surface = colorResource(id = R.color.light_surface),
         surfaceVariant = colorResource(id = R.color.light_surface_variant),
         onSurface = colorResource(id = R.color.light_on_surface),
         onSurfaceVariant = colorResource(id = R.color.light_on_surface_variant),
@@ -38,7 +34,6 @@ fun ISENSmartCompanionTheme(
     val darkColors = darkColorScheme(
         primary = colorResource(id = R.color.dark_primary),
         secondary = colorResource(id = R.color.dark_secondary),
-        //surface = colorResource(id = R.color.dark_surface),
         surfaceVariant = colorResource(id = R.color.dark_surface_variant),
         onSurface = colorResource(id = R.color.dark_on_surface),
         onSurfaceVariant = colorResource(id = R.color.dark_on_surface_variant),
@@ -52,7 +47,6 @@ fun ISENSmartCompanionTheme(
     MaterialTheme(
         colorScheme = colors,
         typography = Typography,
-        //shapes = Shapes,
         content = content
     )
 }

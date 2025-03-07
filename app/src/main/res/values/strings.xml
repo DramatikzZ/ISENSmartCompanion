@@ -1,18 +1,69 @@
 <resources>
-    //App Name
+    <!-- App Name -->
     <string name="app_name">ISENSmartCompanion</string>
     <string name="app_title">Smart Companion</string>
 
-    //Images
+    <!-- Images -->
     <string name="isen_logo">Logo ISEN</string>
     <string name="send_button">Bouton envoyer</string>
 
-    // NavBar
+    <!-- NavBar -->
     <string name="bottom_navbar_home">Home</string>
     <string name="bottom_navbar_event">Events</string>
     <string name="bottom_navbar_history">History</string>
+    <string name="bottom_navbar_agenda">Agenda</string>
 
-    <!-- HISTORY -->
+    <!-- History -->
     <string name="delete_button">Bouton Supprimer</string>
 
+    <!-- Main Screen -->
+    <string name="error_message_chat">Veuillez entrer un message</string>
+    <string name="place_holder_chat">Écrivez un message…</string>
+
+    <!-- Events Screen -->
+    <string name="event_title">Evènements</string>
+    <string name="error_message_events">Erreur lors du chargement des événements.</string>
+    <string name="no_events">Aucun événement disponible.</string>
+
+    <!-- Events Details Activity Screen -->
+    <string name="authorized_message">Authorized !</string>
+    <string name="refused_message">Refused.</string>
+    <string name="subscribe_button">S\'abonner</string>
+    <string name="unsubscribe_button">Se désabonner</string>
+    <string name="event_preferences">Event Prefs</string>
+    <string name="retour_icon">Retour</string>
+
+    <!-- History Screen -->
+    <string name="history_title">Historique des conversations</string>
+    <string name="error_message_history">Aucun historique disponible.</string>
+    <string name="delete_chat_message">Message supprimé</string>
+    <string name="delete_history_message">Historique supprimé</string>
+    <string name="delete_history">Supprimer l\'historique</string>
+
+    <!-- Retrofit -->
+    <string name="events_endpoint">events.json</string>
+    <string name="base_url">https://isen-smart-companion-default-rtdb.europe-west1.firebasedatabase.app/</string>
+
+    <!-- Gemini -->
+    <string name="gemini_model_name">gemini-1.5-flash</string>
+    <string name="api_key">AIzaSyBNw0r1o53RcwJa_-aLWOJUUEbyE03jL3E</string>
+
+    <!-- Database -->
+    <string name="database_name">IsenSmartCompanion Database</string>
+
+    <!-- Channel Notifications -->
+    <string name="channel_id">channel_id</string>
+    <string name="channel_name">channel_name</string>
+    <string name="channel_description">Ceci est la description du channel</string>
+    <string name="channel_importance">IMPORTANCE_HIGH</string>
+
+    <!-- Notifications -->
+    <string name="notification_message">N\'oubliez pas d\'être au rendez-vous !</string>
+    <string name="notification_delay_ms">10000</string>
+
+    <!-- Agenda -->
+    <string name="previous_day">Jour précèdent</string>
+    <string name="next_day">Jour suivant</string>
+    <string name="agenda_title">Agenda</string>
+    <string name="no_courses">Pas de cours disponible</string>
 </resources>

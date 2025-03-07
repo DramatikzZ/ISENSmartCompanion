@@ -37,10 +37,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.core.content.ContextCompat.getString
+import fr.isen.vincent.isensmartcompanion.R
 import fr.isen.vincent.isensmartcompanion.data.chat.ChatDao
 import fr.isen.vincent.isensmartcompanion.data.chat.DBInstance
 import fr.isen.vincent.isensmartcompanion.models.ChatModel
-import fr.isen.vincent.isensmartcompanion.utils.constants.Constants
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -69,7 +70,7 @@ fun HistoryScreen(innerPadding: PaddingValues) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = Constants.HISTORY_TITLE,
+            text = getString(context, R.string.history_title),
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
@@ -82,7 +83,7 @@ fun HistoryScreen(innerPadding: PaddingValues) {
 
         if (chatHistory.isEmpty()) {
             Text(
-                text = Constants.ERROR_MESSAGE_HISTORY,
+                text = getString(context, R.string.error_message_history),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -99,7 +100,7 @@ fun HistoryScreen(innerPadding: PaddingValues) {
                         onDelete = {
                             coroutineScope.launch {
                                 chatDao.deleteChat(message)
-                                Toast.makeText(context, Constants.DELETE_CHAT_MESSAGE, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, getString(context, R.string.delete_chat_message), Toast.LENGTH_SHORT).show()
                             }
                         }
                     )
@@ -113,7 +114,7 @@ fun HistoryScreen(innerPadding: PaddingValues) {
             onClick = {
                 coroutineScope.launch {
                     chatDao.deleteAllChats()
-                    Toast.makeText(context, Constants.DELETE_HISTORY_MESSAGE, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(context, R.string.delete_history_message), Toast.LENGTH_SHORT).show()
                 }
             },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
@@ -121,7 +122,7 @@ fun HistoryScreen(innerPadding: PaddingValues) {
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            Text(Constants.DELETE_HISTORY, color = Color.White)
+            Text(getString(context, R.string.delete_history), color = Color.White)
         }
     }
 }
